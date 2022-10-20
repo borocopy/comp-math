@@ -2,8 +2,8 @@ import numpy as np
 import computation
 from tabulate import tabulate
 
-# Definitions
 # Variant 7
+# Definitions
 K = 2.4
 L = 1.4
 upper_bound = K + L
@@ -14,29 +14,42 @@ def f(x: float) -> float:
     return (x + L) / (x**2 + x + K)
 
 
-def real_integral(x: float):
+def real_integral(x: float) -> float:
     denom = np.sqrt(K - 0.25)
-    return 0.5 * np.log(x**2 + x + K) + np.arctan(((x + 0.5) / denom)) * (L - 0.5) / denom
+    long_computation = np.arctan(((x + 0.5) / denom)) * (L - 0.5) / denom
+    return 0.5 * np.log(x**2 + x + K) + long_computation
 
 
+# Compute value of analytical solution of the integral
 real_value = real_integral(upper_bound) - real_integral(lower_bound)
 
-print(f"Real value of the integral: {real_value}")
-steps = [4, 6, 8]
-trapezoidal_data = ["Trapezoidal"] + [
-    computation.trapezoidal(f, lower_bound, upper_bound, n) for n in steps
-]
-simpson_data = ["Simpson"] + [
-    computation.simpson(f, lower_bound, upper_bound, n) for n in steps
-]
-gauss_data = ["Gauss"] + [
-    computation.gauss(f, lower_bound, upper_bound, n) for n in steps
-]
 
+def test_method(fn: computation.IntegralFunction) -> list[float]:
+    steps = [4, 6, 8, 10]
+    values = [fn(f, lower_bound, upper_bound, n) for n in steps]
+    error = np.abs(values[-1] - real_value)
+    abs_diffs = np.abs(np.array(values) - real_value)
+    print(abs_diffs)
+
+    def calculate_convergence_rate(n: int) -> float:
+        return np.log(abs_diffs[n + 1] / abs_diffs[n]) / np.log(
+            abs_diffs[n] / abs_diffs[n - 1])
+
+    # convergence rate after 3rd step
+    convergence_rate = calculate_convergence_rate(2)
+
+    return values + [error, convergence_rate]
+
+
+print(f"Real value of the integral: {real_value}")
+steps = [4, 6, 8, 10]
+trapezoidal_data = ["Trapezoidal"] + test_method(computation.trapezoidal)
+simpson_data = ["Simpson"] + test_method(computation.simpson)
+gauss_data = ["Gauss"] + test_method(computation.gauss)
 data = [trapezoidal_data, simpson_data, gauss_data]
 
 print(
-    tabulate(
-        data, ["Steps count"] + steps, tablefmt="heavy_grid", floatfmt=".8f"
-    )
-)
+    tabulate(data,
+             ["Steps count"] + steps + ["Absolute error", "Rate of convergence"],
+             tablefmt="heavy_grid",
+             floatfmt=".12f"))
