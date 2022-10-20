@@ -41,15 +41,16 @@ def test_method(fn: computation.IntegralFunction) -> list[float]:
     return values + [error, convergence_rate]
 
 
-print(f"Real value of the integral: {real_value}")
-steps = [4, 6, 8, 10]
-trapezoidal_data = ["Trapezoidal"] + test_method(computation.trapezoidal)
-simpson_data = ["Simpson"] + test_method(computation.simpson)
-gauss_data = ["Gauss"] + test_method(computation.gauss)
-data = [trapezoidal_data, simpson_data, gauss_data]
+def print_table():
+    print(f"Real value of the integral: {real_value}")
+    steps = [4, 6, 8, 10]
+    trapezoidal_data = ["Trapezoidal"] + test_method(computation.trapezoidal)
+    simpson_data = ["Simpson"] + test_method(computation.simpson)
+    gauss_data = ["Gauss"] + test_method(computation.gauss)
+    data = [trapezoidal_data, simpson_data, gauss_data]
 
-print(
-    tabulate(data,
-             ["Steps count"] + steps + ["Absolute error", "Rate of convergence"],
-             tablefmt="heavy_grid",
-             floatfmt=".12f"))
+    print(
+        tabulate(data,
+                 ["Steps count"] + steps + ["Absolute error", "Rate of convergence"],
+                 tablefmt="heavy_grid",
+                 floatfmt=".12f"))
