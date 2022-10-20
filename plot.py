@@ -25,7 +25,7 @@ colors = [
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
 plt.margins(x=0, y=0)
-fig, [ax1, ax2] = plt.subplots(figsize=(16, 9), nrows=2, ncols=1)
+fig, [ax1, ax2] = plt.subplots(figsize=(8, 10), nrows=2, ncols=1)
 
 
 def integrate(fn: computation.IntegralFunction, n: int) -> float:
@@ -37,23 +37,26 @@ ys_trapezoidal = np.array([integrate(computation.trapezoidal, n) for n in xs])
 ys_simpson = np.array([integrate(computation.simpson, n) for n in xs])
 ys_gauss = np.array([integrate(computation.gauss, n) for n in xs])
 
-# .ylim([0.99, 1.359])
+ax1.set_ylim([0.99, 1.359])
 
 ax1.axhline(real_value, c="k", linestyle="--", alpha=0.8)
-ax1.plot(xs, ys_trapezoidal, "-.ob", ms=6)
-ax1.plot(xs, ys_simpson, "^g", ms=6)
+ax1.plot(xs, ys_trapezoidal, "-ob", ms=5, alpha=0.5)
+ax1.plot(xs, ys_simpson, "*g", ms=8, alpha=0.5)
 ax1.plot(xs, ys_gauss, "or", ms=3)
 
-plt.xlabel('Число точек разбиения $n$')
-plt.ylabel('Значение аппроксимации')
-plt.legend(["Истинное значение", "Метод трапеций", "Метод Симпсона", "Метод Гаусса"])
+ax1.set_xlabel('Число точек разбиения $n$')
+ax1.set_ylabel('Значение аппроксимации')
+ax1.legend(["Истинное значение", "Метод трапеций", "Метод Симпсона", "Метод Гаусса"])
 
 ax2.axhline(real_value, c="k", linestyle="--", alpha=0.8)
-ax2.plot(xs, ys_simpson, "-.^g", ms=3)
-ax2.plot(xs, ys_gauss, "-.or", ms=3)
+ax2.plot(xs, ys_simpson, "-og", linewidth=2, ms=5, alpha=0.5)
+ax2.plot(xs, ys_gauss, "-or", linewidth=2, ms=5, alpha=0.5)
 
-plt.xlabel('Число точек разбиения $n$')
-plt.ylabel('Значение аппроксимации')
-plt.legend(["Истинное значение", "Метод Симпсона", "Метод Гаусса"])
+ax2.set_xlabel('Число точек разбиения $n$')
+ax2.set_ylabel('Значение аппроксимации')
+ax2.legend(["Истинное значение", "Метод Симпсона", "Метод Гаусса"])
+
+fig.suptitle("Зависимость значения аппроксимации от количества разбиений", fontsize=16)
+fig.align_ylabels([ax1, ax2])
 
 plt.savefig('plot.png', bbox_inches='tight', pad_inches=0.3, dpi=300)
