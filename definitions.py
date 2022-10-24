@@ -28,9 +28,6 @@ def test_method(fn: computation.IntegralFunction) -> list[float]:
     steps = [4, 6, 8, 10]
     values = [fn(f, lower_bound, upper_bound, n)[0] for n in steps]
     error = np.abs(values[-1] - real_value)
-    abs_diffs = np.abs(np.array(values) - real_value)
-    print(abs_diffs)
-
     return values + [error]
 
 
