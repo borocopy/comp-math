@@ -26,19 +26,12 @@ real_value = real_integral(upper_bound) - real_integral(lower_bound)
 
 def test_method(fn: computation.IntegralFunction) -> list[float]:
     steps = [4, 6, 8, 10]
-    values = [fn(f, lower_bound, upper_bound, n) for n in steps]
+    values = [fn(f, lower_bound, upper_bound, n)[0] for n in steps]
     error = np.abs(values[-1] - real_value)
     abs_diffs = np.abs(np.array(values) - real_value)
     print(abs_diffs)
 
-    def calculate_convergence_rate(n: int) -> float:
-        return np.log(abs_diffs[n + 1] / abs_diffs[n]) / np.log(
-            abs_diffs[n] / abs_diffs[n - 1])
-
-    # convergence rate after 3rd step
-    convergence_rate = calculate_convergence_rate(2)
-
-    return values + [error, convergence_rate]
+    return values + [error]
 
 
 def print_table():
@@ -51,6 +44,6 @@ def print_table():
 
     print(
         tabulate(data,
-                 ["Steps count"] + steps + ["Absolute error", "Rate of convergence"],
+                 ["Steps count"] + steps + ["Absolute error"],
                  tablefmt="heavy_grid",
                  floatfmt=".12f"))
