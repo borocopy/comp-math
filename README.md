@@ -9,7 +9,7 @@ pip install scipy numpy matplotlib tabulate
 In the source file `definitions.py` change the folowing variables and function definitoins:
 - `K`, `L`
 - `f` - integrand function
-- 'real_integral' - analytical solution to the integral
+- `real_integral` - analytical solution to the integral
 
 ## Execution
 Run in the project root the following terminal command:
